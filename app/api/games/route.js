@@ -4,21 +4,22 @@ const sql = neon(process.env.DATABASE_URL)
 
 export async function GET(request) {
   try {
-    const { rows } = await sql`SELECT * FROM games ORDER BY name ASC;`
+
+    const result = await sql`SELECT * FROM games ORDER BY name ASC;`
 
     // Handle case where no games are found
-    if (!rows || rows.length === 0) {
+    if (!result || result.length === 0) {
       return new Response(JSON.stringify([]), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    return new Response(JSON.stringify(rows), {
+    return new Response(JSON.stringify(result), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(JSON.stringify(rows))
+        "Content-Length": Buffer.byteLength(JSON.stringify(result))
       },
     });
   } catch (error) {
