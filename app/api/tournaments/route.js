@@ -4,7 +4,7 @@ const sql = neon(process.env.DATABASE_URL)
 
 export async function GET(request) {
   try {
-    const { rows } = await sql`
+    const results = await sql`
             SELECT
                 t.id,
                 t.game_id,
@@ -29,10 +29,10 @@ export async function GET(request) {
             ORDER BY t.start_date DESC;
         `
     // Ensure numeric values are parsed as floats if they come as strings from the DB
-    const parsedRows = rows.map((row) => ({
-      ...row,
-      entry_fee: Number.parseFloat(row.entry_fee),
-      prize_pool: Number.parseFloat(row.prize_pool),
+    const parsedRows = results.map((result) => ({
+      ...result,
+      entry_fee: Number.parseFloat(result.entry_fee),
+      prize_pool: Number.parseFloat(result.prize_pool),
     }))
     return new Response(JSON.stringify(parsedRows), {
       status: 200,
